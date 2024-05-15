@@ -16,6 +16,9 @@ app.use(express.static("public"));
 // Route that handles GET requests to '/query', processed by queryHandler
 app.get("/query", queryHandler);
 
+// Route that handles GET requests to '/palindrome', processed by palindromeHandler
+app.get('/palindrome', palindromeHandler);
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Error Handling
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,6 +56,25 @@ function queryHandler(req, res, next) {
     }
 }
 
+// Handler function for generating palindromes
+function palindromeHandler(req, res, next) {
+    let qObj = req.query;
+    console.log(qObj);
+
+    // Check if 'word' query parameter is present
+    if (qObj.word !== undefined) {
+        // Generate palindrome of the provided word
+        const reversedWord = qObj.word.split('').reverse().join('');
+        const palindrome = qObj.word + reversedWord;
+
+        // Respond with the palindrome in JSON format
+        res.json({ "palindrome": palindrome });
+    } else {
+        // If the 'word' parameter is not present, pass to the next handler
+        next();
+    }
+}
+
 //`````````````````````````````````````````````````````````````````````````````````
 // Handler function for cases where no appropriate file or route is found
 //
@@ -68,8 +90,5 @@ function fileNotFound(req, res) {
     res.send("Cannot find " + url);
 }
 
-/*
- *
- */
 
-function palindromeHandler(req, res, next) {}
+
